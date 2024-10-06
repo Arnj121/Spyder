@@ -6,6 +6,17 @@ from db import *
 app=Flask(__name__,static_folder='images')
 
 
+if not os.path.isdir('images'):
+    try:
+        os.mkdir('images')
+        print('creating directory images')
+    except Exception:
+        print('error creating directory images')
+        exit(-1)
+else:
+    print('directory images exists')
+
+
 @app.route('/',methods=['GET'])
 def default():
     return {'response':'methods available: [POST]:/analyze | accepts: form/image files'}

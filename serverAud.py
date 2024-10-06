@@ -6,6 +6,16 @@ from db import *
 
 app=Flask(__name__)
 
+if not os.path.isdir('audios'):
+    try:
+        os.mkdir('audios')
+        print('creating directory audios')
+    except Exception:
+        print('error creating directory audios')
+        exit(-1)
+else:
+    print('directory audios exists')
+
 @app.route('/',methods=['GET'])
 def default():
     return {'response':'methods available: [POST]:/analyze | accepts: form/audio files'}

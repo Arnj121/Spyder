@@ -4,7 +4,19 @@ import math
 from model import yolo
 from db import *
 
-app=Flask(__name__,static_folder='images')
+app=Flask(__name__)
+
+
+if not os.path.isdir('videos'):
+    try:
+        os.mkdir('videos')
+        print('creating directory videos')
+    except Exception:
+        print('error creating directory videos')
+        exit(-1)
+else:
+    print('directory videos exists')
+
 
 @app.route('/',methods=['GET'])
 def default():
