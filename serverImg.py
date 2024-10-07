@@ -24,14 +24,15 @@ def default():
 @app.route('/analyze',methods=['POST'])
 def detectImage():
     files = list(request.files)
-    resultfilepath=[]
+    results=[]
     for file in files:
-        tmp='images/'+str(math.floor(random.random()*1000000))+ request.files[file].filename
-        request.files[file].save(tmp)
+        tmp=str(math.floor(random.random()*1000000))+ request.files[file].filename
+        request.files[file].save('images/'+tmp)
         results=yolo.detectimage(tmp)
-        resultfilepath.append(results[0])
+        os.remove('images/'+tmp)
+        results.append({tmp:results[1]})
         print(results[1])
         collection.insert_one({'filename':tmp,'data':results[1]})
-    return {'filepath':resultfilepath}
+    return {'response':results}
 
 app.run(host=host,port=imgport)

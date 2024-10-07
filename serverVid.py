@@ -25,16 +25,17 @@ def default():
 @app.route('/analyze',methods=['POST'])
 def detectVideo():
     files = list(request.files)
-    resultvideopath=[]
+    results=[]
     for file in files:
-        tmp='videos/'+str(math.floor(random.random()*1000000))+ request.files[file].filename
-        request.files[file].save(tmp)
+        tmp=str(math.floor(random.random()*1000000))+'__'+ request.files[file].filename
+        request.files[file].save('videos/'+tmp)
         results = yolo.detectvideo(tmp)
-        resultvideopath.append(results[0])
+        os.remove('videos/'+tmp)
+        results.append({tmp:results[1]})
         print(results[1])
         collection.insert_one({'filename':tmp,'data':results[1]})
 
-    return {'filepath':resultvideopath}
+    return {'response':results}
 
 app.run(host=host,port=vidport)
 

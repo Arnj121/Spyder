@@ -1,10 +1,5 @@
 import whisper
-import nltk
-from nltk.corpus import stopwords
-from nltk.tokenize import word_tokenize
-nltk.download('stopwords')
-nltk.download('punkt_tab')
-nltk.download('punkt')
+from tokenizer import *
 models={
     # 'medium': whisper.load_model("medium"),
     # 'base': whisper.load_model("base"),

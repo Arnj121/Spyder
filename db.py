@@ -9,9 +9,11 @@ host=os.getenv('HOST')
 vidport=os.getenv('VIDPORT')
 imgport=os.getenv('VIDPORT')
 audport=os.getenv('AUDPORT')
+textport=os.getenv('TEXTPORT')
 searchport=os.getenv("SEARCHPORT")
 database=os.getenv('DATABASE')
 collecName=os.getenv('COLLECNAME')
+
 
 client = MongoClient(dburl)
 db = client[database]
