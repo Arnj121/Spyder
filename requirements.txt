@@ -1,0 +1,8 @@
+Flask==3.0.3
+nltk==3.9.1
+openai_whisper==20240930
+opencv_python==4.10.0.84
+pymongo==4.10.1
+pypdf==5.0.1
+python-dotenv==1.0.1
+torch==2.4.1
