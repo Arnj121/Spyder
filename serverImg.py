@@ -28,11 +28,11 @@ def detectImage():
     for file in files:
         tmp=str(math.floor(random.random()*1000000))+ request.files[file].filename
         request.files[file].save('images/'+tmp)
-        results=yolo.detectimage(tmp)
+        result=yolo.detectimage('images/'+tmp)
         os.remove('images/'+tmp)
-        results.append({tmp:results[1]})
-        print(results[1])
-        collection.insert_one({'filename':tmp,'data':results[1]})
+        results.append({tmp:result[1]})
+        print(result[1])
+        collection.insert_one({'filename':tmp,'data':result[1]})
     return {'response':results}
 
 app.run(host=host,port=imgport)

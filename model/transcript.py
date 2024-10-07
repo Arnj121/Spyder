@@ -1,5 +1,5 @@
 import whisper
-from tokenizer import *
+from model.tokenizer import *
 models={
     # 'medium': whisper.load_model("medium"),
     # 'base': whisper.load_model("base"),
@@ -10,8 +10,6 @@ def transcribe(audioPath,defaultModel='small'):
     audio = whisper.load_audio(audioPath)
     result = models[defaultModel].transcribe(audio)
     print(result)
-    words = word_tokenize(result['text'])
-    stop_words = set(stopwords.words('english'))
-    filtered_words = [word for word in words if word.lower() not in stop_words]
+    filtered_words = tokenize(result['text'])
 
-    return [audioPath,list(set(filtered_words)),result['text']]
+    return [audioPath,filtered_words,result['text']]

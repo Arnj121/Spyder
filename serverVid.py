@@ -29,11 +29,11 @@ def detectVideo():
     for file in files:
         tmp=str(math.floor(random.random()*1000000))+'__'+ request.files[file].filename
         request.files[file].save('videos/'+tmp)
-        results = yolo.detectvideo(tmp)
+        result = yolo.detectvideo('videos/'+tmp)
         os.remove('videos/'+tmp)
-        results.append({tmp:results[1]})
-        print(results[1])
-        collection.insert_one({'filename':tmp,'data':results[1]})
+        results.append({tmp:result[1]})
+        print(result[1])
+        collection.insert_one({'filename':tmp,'data':result[1]})
 
     return {'response':results}
 

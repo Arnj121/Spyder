@@ -27,11 +27,11 @@ def detectAudio():
     for file in files:
         tmp=str(math.floor(random.random()*1000000))+ request.files[file].filename
         request.files[file].save('audios/'+tmp)
-        results=transcript.transcribe(tmp)
+        result=transcript.transcribe('audios/'+tmp)
         os.remove('audios/'+tmp)
-        results.append({tmp:results[1]})
-        print(results[1])
-        collection.insert_one({'filename':tmp,'data':results[1],'rawdata':results[2]})
+        results.append({tmp:result[1]})
+        print(result[1])
+        collection.insert_one({'filename':tmp,'data':result[1],'rawdata':result[2]})
     return {'response':results}
 
 app.run(host=host,port=audport)

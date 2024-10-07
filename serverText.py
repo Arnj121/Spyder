@@ -1,7 +1,6 @@
 from flask import Flask,request
 import random
 import math
-from model import yolo
 from db import *
 
 from model import text
@@ -24,19 +23,19 @@ def default():
     return {'response':'methods available: [POST]:/analyze | accepts: form/text files'}
 
 @app.route('/analyze',methods=['POST'])
-def detectVideo():
+def detectText():
     files = list(request.files)
     results=[]
     for file in files:
         tmp=str(math.floor(random.random()*1000000))+'__'+ request.files[file].filename
         request.files[file].save('text/'+tmp)
-        results = text.extract(tmp)
+        result = text.extract('text/'+tmp)
         os.remove('text/'+tmp)
-        results.append({tmp:results[0]})
-        print(results[0])
-        collection.insert_one({'filename':tmp,'data':results[0],'rawdata':results[1]})
+        results.append({tmp:result[0]})
+        print(result[0])
+        collection.insert_one({'filename':tmp,'data':result[0],'rawdata':result[1]})
 
     return {'response':results}
 
-app.run(host=host,port=vidport)
+app.run(host=host,port=textport)
 
