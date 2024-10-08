@@ -1,3 +1,4 @@
+import requests
 from flask import Flask,request
 import random
 import math
@@ -24,18 +25,26 @@ def default():
 
 @app.route('/analyze',methods=['POST'])
 def detectVideo():
-    files = list(request.files)
-    results=[]
-    for file in files:
-        tmp=str(math.floor(random.random()*1000000))+'__'+ request.files[file].filename
-        request.files[file].save('videos/'+tmp)
-        result = yolo.detectvideo('videos/'+tmp)
-        os.remove('videos/'+tmp)
-        results.append({tmp:result[1]})
-        print(result[1])
-        collection.insert_one({'filename':tmp,'data':result[1]})
+    if request.form.get('path')=='true':
+        results=[]
+        path = request.form.get('filepath')
+        result=yolo.detectvideo(path,True)
+        results.append({path: result[1]})
+        collection.insert_one({'filename': path, 'data': result[1]})
+        return {'response':results}
+    else:
+        files = list(request.files)
+        results=[]
+        for file in files:
+            tmp=str(math.floor(random.random()*1000000))+'__'+ request.files[file].filename
+            request.files[file].save('videos/'+tmp)
+            result = yolo.detectvideo('videos/'+tmp,False)
+            os.remove('videos/'+tmp)
+            results.append({tmp:result[1]})
+            print(result[1])
+            collection.insert_one({'filename':tmp,'data':result[1]})
 
-    return {'response':results}
+        return {'response':results}
 
 app.run(host=host,port=vidport)
 

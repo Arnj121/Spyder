@@ -1,12 +1,12 @@
 from flask import Flask,request
+from flask_cors import CORS
 import random
 import math
 from db import *
-
 from model import text
 
 app=Flask(__name__)
-
+CORS(app)
 if not os.path.isdir('text'):
     try:
         os.mkdir('text')
@@ -17,25 +17,34 @@ if not os.path.isdir('text'):
 else:
     print('directory text exists')
 
-
 @app.route('/',methods=['GET'])
 def default():
     return {'response':'methods available: [POST]:/analyze | accepts: form/text files'}
 
 @app.route('/analyze',methods=['POST'])
 def detectText():
-    files = list(request.files)
-    results=[]
-    for file in files:
-        tmp=str(math.floor(random.random()*1000000))+'__'+ request.files[file].filename
-        request.files[file].save('text/'+tmp)
-        result = text.extract('text/'+tmp)
-        os.remove('text/'+tmp)
-        results.append({tmp:result[0]})
-        print(result[0])
-        collection.insert_one({'filename':tmp,'data':result[0],'rawdata':result[1]})
+    print(request.form)
+    if request.form.get('path')=='true':
+        results=[]
+        path = request.form.get('filepath')
+        result = text.extract(path,True)
+        results.append({path: result[0]})
+        print(result[1])
+        collection.insert_one({'filename': path, 'data': result[0], 'rawdata': result[1]})
+        return {'response':results}
+    else:
+        files = list(request.files)
+        results=[]
+        for file in files:
+            tmp=str(math.floor(random.random()*1000000))+'__'+ request.files[file].filename
+            request.files[file].save('text/'+tmp)
+            result = text.extract('text/'+tmp,False)
+            os.remove('text/'+tmp)
+            results.append({tmp:result[0]})
+            print(result[0])
+            collection.insert_one({'filename':tmp,'data':result[0],'rawdata':result[1]})
 
-    return {'response':results}
+        return {'response':results}
 
 app.run(host=host,port=textport)
 

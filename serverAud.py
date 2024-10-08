@@ -22,16 +22,24 @@ def default():
 
 @app.route('/analyze',methods=['POST'])
 def detectAudio():
-    files = list(request.files)
-    results=[]
-    for file in files:
-        tmp=str(math.floor(random.random()*1000000))+ request.files[file].filename
-        request.files[file].save('audios/'+tmp)
-        result=transcript.transcribe('audios/'+tmp)
-        os.remove('audios/'+tmp)
-        results.append({tmp:result[1]})
-        print(result[1])
-        collection.insert_one({'filename':tmp,'data':result[1],'rawdata':result[2]})
-    return {'response':results}
+    if request.form.get('path')=='true':
+        results = []
+        path = request.form.get('filepath')
+        result = transcript.transcribe(path, True)
+        results.append({path: result[1]})
+        collection.insert_one({'filename': path, 'data': result[1]})
+        return {'response': results}
+    else:
+        files = list(request.files)
+        results=[]
+        for file in files:
+            tmp=str(math.floor(random.random()*1000000))+ request.files[file].filename
+            request.files[file].save('audios/'+tmp)
+            result=transcript.transcribe('audios/'+tmp,False)
+            os.remove('audios/'+tmp)
+            results.append({tmp:result[1]})
+            print(result[1])
+            collection.insert_one({'filename':tmp,'data':result[1],'rawdata':result[2]})
+        return {'response':results}
 
 app.run(host=host,port=audport)
