@@ -1,7 +1,8 @@
 from flask import Flask, request
 from db import *
 
-app=Flask(__name__)
+app=Flask(__name__,static_folder='images')
+
 
 @app.get('/search')
 def search():

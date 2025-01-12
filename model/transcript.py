@@ -2,9 +2,9 @@ import whisper
 from model.tokenizer import *
 import requests
 models={
-    # 'medium': whisper.load_model("medium"),
-    # 'base': whisper.load_model("base"),
     'small': whisper.load_model("small"),
+    'medium': whisper.load_model("medium"),
+    'base': whisper.load_model("base"),
     # 'large': whisper.load_model("large"),
 }
 def transcribe(audioPath,url,defaultModel='small'):
